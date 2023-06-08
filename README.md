@@ -1,4 +1,5 @@
-# VWBL-protocol
+# eee-contract
+
 VWBL is an on-chain, condition-based, decentralized access control protocol. The VWBL protocol enables the creation of NFTs which only rightful NFT owners can fully access their owned digital content. By utilizing the VWBL protocol, developers can create services to provide blockchain users (NFT creators and digital content consumers) with decentralized encryption functionality.
 
 ## How to Deploy Your Own VWBL Smart Contract
