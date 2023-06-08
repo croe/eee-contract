@@ -8,6 +8,7 @@ import "@nomiclabs/hardhat-web3"
 import "@typechain/hardhat"
 import "hardhat-gas-reporter"
 import "solidity-coverage"
+import "hardhat-watcher"
 
 dotenv.config()
 
@@ -48,12 +49,24 @@ const config: HardhatUserConfig = {
         },
         aurora: {
             url: process.env.AURORA_URL || "",
-            accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : []
+            accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
         },
         aurora_testnet: {
             url: process.env.AURORA_TESTNET_URL || "",
-            accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : []
-        }
+            accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+        },
+    },
+    watcher: {
+        test: {
+            tasks: [{ command: "test", params: { testFiles: ["{path}"] } }],
+            files: ["./test/**/*"],
+            verbose: true,
+            clearOnStart: true,
+            start: "echo Running my test task now..",
+        },
+    },
+    etherscan: {
+        apiKey: process.env.ETHERSCAN_API_KEY,
     },
 }
 
