@@ -82,7 +82,7 @@ contract VWBLERC6105 is VWBL, IERC6105, ReentrancyGuard {
 
     /// @notice Remove the listing for `tokenId`
     /// @param tokenId - identifier of the token being listed
-    function delistItem(uint256 tokenId) external virtual {
+    function delistItem(uint256 tokenId) public virtual {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC6105: caller is not owner nor approved");
         require(_isForSale(tokenId), "ERC6105: invalid listing");
 
@@ -94,7 +94,7 @@ contract VWBLERC6105 is VWBL, IERC6105, ReentrancyGuard {
     /// @param tokenId - identifier of the token being purchased
     /// @param salePrice - the price the token is being sold for
     /// @param supportedToken - contract addresses of supported token or zero address
-    function buyItem(uint256 tokenId, uint256 salePrice, address supportedToken) external nonReentrant payable virtual {
+    function buyItem(uint256 tokenId, uint256 salePrice, address supportedToken) public nonReentrant payable virtual {
         address tokenOwner = ownerOf(tokenId);
         address buyer = msg.sender;
         uint256 historicalPrice = _listings[tokenId].historicalPrice;
@@ -113,8 +113,7 @@ contract VWBLERC6105 is VWBL, IERC6105, ReentrancyGuard {
                 _processSupportedTokenPayment(royalties, buyer, royaltyRecipient, address(0));
             }
             _processSupportedTokenPayment(payment, buyer, tokenOwner, address(0));
-        }
-        else {
+        } else {
             uint256 num = IERC20(supportedToken).allowance(buyer, address(this));
             require(num >= salePrice, "ERC6105: insufficient allowance");
             if (royalties > 0) { 
