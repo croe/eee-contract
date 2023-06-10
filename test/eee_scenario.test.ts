@@ -161,5 +161,9 @@ describe("EEE scenario test", function () {
         // deployer can mint blueprints additional times
         const documentId_10 = ethers.utils.randomBytes(32)
         await blueprint.mint(vwblNetworkUrl, 0, documentId_10, { value: feeWei })
+
+        // players can burn parts
+        await parts.connect(bob).burn(1)
+        await parts.connect(carol).burn(2)
     })
 })
