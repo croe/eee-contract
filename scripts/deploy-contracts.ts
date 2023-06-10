@@ -5,16 +5,10 @@
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat"
 import * as dotenv from "dotenv"
-import { Contract } from "ethers"
+import { Blueprint, Coin, Parts } from "../typechain-types"
 dotenv.config()
 
 async function main() {
-    // Hardhat always runs the compile task when running scripts with its command
-    // line interface.
-    //
-    // If this script is run directly using `node` you may want to call compile
-    // manually to make sure everything is compiled
-    // await hre.run('compile');
     const baseURI = process.env.METADATA_URL!
     console.log("VWBL Metadata URL: ", baseURI)
 
@@ -23,32 +17,31 @@ async function main() {
     const messageToBeSigned = process.env.MESSAGE_TO_BE_SIGNED!
     console.log("Message to be signed: ", messageToBeSigned)
 
-    let vwbl6105: Contract
+    const Coin = await ethers.getContractFactory("Coin")
+    const Blueprint = await ethers.getContractFactory("Blueprint")
+    const Parts = await ethers.getContractFactory("Parts")
 
-    const VWBLERC721ERC6105 = await ethers.getContractFactory("VWBLERC6105")
-    vwbl6105 = await VWBLERC721ERC6105.deploy(
+    // deploy coin
+    let coin = (await Coin.deploy()) as Coin
+    console.log("Coin Contract deployed to:", coin.address)
+
+    // deploy blueprint
+    let blueprint = (await Blueprint.deploy(
         baseURI,
         gatewayProxyContractAddress,
         accessControlCheckerByNFTContractAddress,
         messageToBeSigned
-    )
+    )) as Blueprint
+    console.log("Blueprint Contract deployed to:", blueprint.address)
 
-    console.log("VWBLERC721 Contract deployed to:", vwbl6105.address)
-
-    /**
-     * Below is deploy script of VWBLMetadata Contract.
-     * Unlike the VWBL Contract, the metadata url is stored when mint.
-    
-    let VWBLERC721MetadataContract: Contract;
-
-    const vwblERC721Metadata = await ethers.getContractFactory("VWBLMetadata")
-    VWBLERC721MetadataContract = await vwblERC721Metadata.deploy(
+    // deploy parts
+    let parts = (await Parts.deploy(
+        baseURI,
         gatewayProxyContractAddress,
         accessControlCheckerByNFTContractAddress,
         messageToBeSigned
-    )
-    console.log("VWBLERC721 Metadata Contract deployed to:", VWBLERC721MetadataContract.address)
-    */
+    )) as Parts
+    console.log("Parts Contract deployed to:", parts.address)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
