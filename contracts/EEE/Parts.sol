@@ -5,7 +5,7 @@ import "./VWBLERC6105.sol";
 
 contract Parts is VWBLERC6105 {
 
-    address public trader; 
+    address public trader;
 
     constructor(
         string memory _baseURI,
@@ -14,9 +14,9 @@ contract Parts is VWBLERC6105 {
         string memory _signMessage
     ) VWBLERC6105(_baseURI, _gatewayProxy, _accessCheckerContract, _signMessage) {}
 
-    modifier onlyTrader() { 
-        require(msg.sender == trader, "Parts: only trader"); 
-        _; 
+    modifier onlyTrader() {
+        require(msg.sender == trader, "Parts: only trader");
+        _;
     }
 
     function mint(
@@ -24,19 +24,24 @@ contract Parts is VWBLERC6105 {
         uint256 _royaltiesPercentage,
         bytes32 _documentId
     ) public payable override returns (uint256) {
-        require(_royaltiesPercentage == 0, "Blueprint: royalty is disabled"); 
-        return super.mint(_getKeyURl, _royaltiesPercentage, _documentId); 
+        require(_royaltiesPercentage == 0, "Parts: royalty is disabled");
+        return super.mint(_getKeyURl, _royaltiesPercentage, _documentId);
+    }
+
+    function burn(uint256 tokenId) public virtual {
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "Parts: caller is not token owner or approved");
+        _burn(tokenId);
     }
 
     function buyItem(
-        uint256 tokenId, 
-        uint256 salePrice, 
+        uint256 tokenId,
+        uint256 salePrice,
         address supportedToken
     ) public payable override onlyTrader {
         super.buyItem(tokenId, salePrice, supportedToken);
     }
 
-    function updateTrader(address _trader) external onlyOwner { 
-        trader = _trader; 
+    function updateTrader(address _trader) external onlyOwner {
+        trader = _trader;
     }
 }
