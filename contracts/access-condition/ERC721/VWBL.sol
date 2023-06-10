@@ -160,7 +160,7 @@ contract VWBL is VWBLProtocol, Ownable, AbstractVWBLSettings, IVWBL {
         string memory _getKeyURl,
         uint256 _royaltiesPercentage,
         bytes32 _documentId
-    ) public payable returns (uint256) {
+    ) public payable virtual returns (uint256) {
         uint256 tokenId = super._mint(_getKeyURl, _royaltiesPercentage, _documentId);
 
         // grant access control to nft and pay vwbl fee and register nft data to access control checker contract
